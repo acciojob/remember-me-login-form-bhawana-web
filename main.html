@@ -4,22 +4,123 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login Form</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+        }
+        .login-container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 300px;
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        input[type="text"],
+        input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        input[type="checkbox"] {
+            margin-right: 5px;
+        }
+        input[type="submit"] {
+            width: 100%;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        input[type="submit"]:hover {
+            background-color: #45a049;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #2196F3;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        button:hover {
+            background-color: #1976D2;
+        }
+    </style>
 </head>
 <body>
-    <h1>Login Form</h1>
 
-    <!-- Login Form -->
-    <form id="login-form">
-        <input type="text" id="username" placeholder="Username" required><br><br>
-        <input type="password" id="password" placeholder="Password" required><br><br>
-        <input type="checkbox" id="checkbox">
-        <label for="checkbox">Remember me</label><br><br>
-        <input type="submit" id="submit" value="Submit">
-    </form>
+    <div class="login-container">
+        <h1>Login Form</h1>
+        <form id="loginForm">
+            <input type="text" id="username" placeholder="Username" required>
+            <input type="password" id="password" placeholder="Password" required>
+            <div>
+                <input type="checkbox" id="checkbox">
+                <label for="checkbox">Remember me</label>
+            </div>
+            <input type="submit" id="submit" value="Submit">
+        </form>
+        <button id="existing" style="display:none;">Login as existing user</button>
+    </div>
 
-    <!-- Existing user login button -->
-    <button id="existing" style="display:none;">Login as existing user</button>
+    <script>
+        // Check for saved login details in local storage
+        window.onload = function() {
+            const savedUsername = localStorage.getItem('username');
+            const savedPassword = localStorage.getItem('password');
+            if (savedUsername && savedPassword) {
+                document.getElementById('existing').style.display = 'block';
+            }
+        };
 
-    <script src="login.js"></script>
+        // Handle form submission
+        document.getElementById('loginForm').onsubmit = function(event) {
+            event.preventDefault();
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const rememberMe = document.getElementById('checkbox').checked;
+
+            // If remember me is checked, save to localStorage
+            if (rememberMe) {
+                localStorage.setItem('username', username);
+                localStorage.setItem('password', password);
+            } else {
+                localStorage.removeItem('username');
+                localStorage.removeItem('password');
+            }
+
+            // Show login success alert
+            alert(`Logged in as ${username}`);
+
+            // Show the "Login as existing user" button if credentials are saved
+            if (rememberMe) {
+                document.getElementById('existing').style.display = 'block';
+            }
+        };
+
+        // Handle existing user login
+        document.getElementById('existing').onclick = function() {
+            const savedUsername = localStorage.getItem('username');
+            alert(`Logged in as ${savedUsername}`);
+        };
+    </script>
+
 </body>
 </html>
