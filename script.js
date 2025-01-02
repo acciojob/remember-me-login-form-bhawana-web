@@ -1,48 +1,53 @@
 //your JS code here. If required.
-// Get elements
-// Function to handle form submission
-function handleLogin(event) {
-  event.preventDefault(); // Prevent form submission and page refresh
+// Check if there are saved credentials in localStorage
+const savedUsername = localStorage.getItem('username');
+const savedPassword = localStorage.getItem('password');
 
-  // Get form values
+// Function to show or hide the "Login as existing user" button
+const toggleExistingUserButton = () => {
+  const existingBtn = document.getElementById("existing");
+  if (savedUsername && savedPassword) {
+    existingBtn.style.display = "block"; // Show the button if credentials are saved
+  } else {
+    existingBtn.style.display = "none"; // Hide the button if no saved credentials
+  }
+};
+
+// Event listener for "Login as existing user" button
+document.getElementById("existing").addEventListener("click", () => {
+  alert(`Logged in as ${savedUsername}`);
+});
+
+// Form submission handling
+document.getElementById("loginForm").addEventListener("submit", (e) => {
+  e.preventDefault();
+
+  // Get values from the form
   const username = document.getElementById("username").value;
   const password = document.getElementById("password").value;
   const rememberMe = document.getElementById("checkbox").checked;
 
-  // If "Remember me" checkbox is checked, save username and password in local storage
+  // If "Remember me" is checked, store username and password in localStorage
   if (rememberMe) {
     localStorage.setItem("username", username);
     localStorage.setItem("password", password);
   } else {
-    // If unchecked, remove username and password from local storage
+    // If not checked, remove saved username and password from localStorage
     localStorage.removeItem("username");
     localStorage.removeItem("password");
   }
 
-  // Show the logged in message in an alert
-  alert("Logged in as " + username);
+  // Display the login success alert
+  alert(`Logged in as ${username}`);
 
-  // Check if the user has saved credentials and display the "Login as existing user" button
-  if (localStorage.getItem("username") && localStorage.getItem("password")) {
-    document.getElementById("existing").style.display = "block"; // Show the "existing user" button
-  }
+  // Toggle visibility of the "Login as existing user" button
+  toggleExistingUserButton();
 
-  // Hide the login form after submission
-  document.getElementById("loginForm").reset(); // Reset form fields
-}
+  // Reset the form for a fresh start
+  document.getElementById("loginForm").reset();
+});
 
-// Function to log in as an existing user using saved credentials
-function loginAsExistingUser() {
-  const savedUsername = localStorage.getItem("username");
-  alert("Logged in as " + savedUsername);
-}
-
-// Check if there are saved credentials in localStorage when the page loads
-window.onload = function() {
-  const savedUsername = localStorage.getItem("username");
-  const savedPassword = localStorage.getItem("password");
-
-  if (savedUsername && savedPassword) {
-    document.getElementById("existing").style.display = "block"; // Show "Login as existing user" button
-  }
+// Load existing credentials from localStorage on page load
+window.onload = () => {
+  toggleExistingUserButton();
 };
